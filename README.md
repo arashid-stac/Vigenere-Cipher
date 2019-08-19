@@ -21,7 +21,7 @@ The vigenere table is created by using a 2 Dimensional Array whereas the message
 - User is currently able to input symbols and numbers, but they shouldn't. For now they are ignored and treated as spaces.
 
 # Idea
-1) Add a method to decode a message
+- [x] Add a method to decode a message
 
 # Vigenere Table
 ![Alt Text](https://upload.wikimedia.org/wikipedia/commons/9/9a/Vigen%C3%A8re_square_shading.svg)
