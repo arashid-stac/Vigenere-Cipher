@@ -18,9 +18,7 @@ The vigenere table is created by using a 2 Dimensional Array whereas the message
 
 # To-do list
 1) Error control
-- User is currently able to input symbols and numbers, but they shouldn't.
-- The cipher does not skip over spaces, but it should
-- Upper case letters don't encode correctly
+- User is currently able to input symbols and numbers, but they shouldn't. For now they are ignored and treated as spaces.
 
 # Idea
 1) Add a method to decode a message
