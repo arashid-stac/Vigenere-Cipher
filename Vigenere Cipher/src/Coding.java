@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class Coding {
 	Cipher cipher = new Cipher();
@@ -8,6 +9,7 @@ public class Coding {
 
 	BufferedReader br;
 	String message;
+	String codedMessage;
 	char[] messageArray;
 	String keyword;
 	char[] keywordArray;
@@ -15,11 +17,14 @@ public class Coding {
 	int messageLength;
 	char[] keywordRedone;
 	char[] encodedMessage;
+	char[] decodedMessage;
+
+	Scanner sc = new Scanner(System.in);
+	private int input;
 
 	private void encode() throws IOException {
-		System.out.println("Welcome to the Vigenere Cipher program!");
 		br = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Enter the message you'd like to encode. Symbols and numbers will be ignored.");
+		System.out.println("\nEnter the message you'd like to encode. Symbols and numbers will be ignored.\n");
 		message = br.readLine().toLowerCase();
 		messageLength = message.length();
 		messageArray = new char[messageLength];
@@ -27,7 +32,7 @@ public class Coding {
 
 		br = new BufferedReader(new InputStreamReader(System.in));
 		do {
-			System.out.println("Enter the keyword you'd like to use to encode your message.");
+			System.out.println("\nEnter the keyword you'd like to use to encode your message.\n");
 			keyword = br.readLine().toLowerCase();
 			keywordLength = keyword.length();
 			keywordArray = new char[keywordLength];
@@ -86,13 +91,12 @@ public class Coding {
 			for (int j = 0; j < 27; j++) {
 				if (theCipher[j][0] == messageArray[i]) {
 					// save the index
-					if (messageArray[i] == theCipher[0][0]) {
+					if (messageArray[i] == ' ') {
 						rowIndex = 0;
-
-					} else {
-						rowIndex = j;
 						break;
 					}
+					rowIndex = j;
+					break;
 				}
 			}
 			for (int k = 0; k < 27; k++) {
@@ -110,11 +114,111 @@ public class Coding {
 
 			encodedMessage[i] = theCipher[rowIndex][columnIndex];
 		}
-		System.out.println("Here is your encoded message: ");
+		System.out.println("\nHere is your encoded message: ");
 		System.out.println(encodedMessage);
+		System.out.println("");
+	}
+
+	private void decode() throws IOException {
+		br = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("\nEnter the coded message you'd like to decode. Symbols and numbers will be ignored.\n");
+		codedMessage = br.readLine().toLowerCase();
+		messageLength = codedMessage.length();
+		messageArray = new char[messageLength];
+		codedMessage.getChars(0, messageLength, messageArray, 0);
+
+		br = new BufferedReader(new InputStreamReader(System.in));
+		do {
+			System.out.println("\nEnter the keyword used to encode the codedMessage.\n");
+			keyword = br.readLine().toLowerCase();
+			keywordLength = keyword.length();
+			keywordArray = new char[keywordLength];
+			keyword.getChars(0, keywordLength, keywordArray, 0);
+			if (keywordLength > messageLength || keywordLength == 0) {
+				System.out.println(
+						"Please make sure the keyword is one word and that its length is less than the codedMessage length.");
+			}
+		} while (keywordLength > messageLength || keywordLength == 0 || keyword.contains(" "));
+
+		if (keywordLength < messageLength) {
+			keywordRedone = new char[messageLength];
+			int j = 0;
+			for (int i = 0; i < messageLength; i++) {
+				if (j >= keywordLength) {
+					j = 0;
+				}
+				keywordRedone[i] = keywordArray[j];
+				j++;
+			}
+			this.keywordArray = keywordRedone;
+		}
+
+		theCipher = cipher.createCipher();
+		decodedMessage = new char[messageLength];
+		// decode the codedMessage
+		int rowIndex = 0;
+		int columnIndex = 0;
+
+		int decrement = 0;
+
+		for (int i = 0; i < messageLength; i++) {
+			// look for the correct indices
+			rowIndex = 0;
+			columnIndex = 0;
+
+			for (int k = 0; k < 27; k++) {
+				if (theCipher[0][k] == keywordArray[i - decrement]) {
+					// save the index
+					columnIndex = k;
+					break;
+				}
+			}
+
+			for (int j = 0; j < 27; j++) {
+				if (messageArray[i] == ' ') {
+					rowIndex = 0;
+					decrement++;
+					break;
+				}
+				if (theCipher[j][columnIndex] == messageArray[i]) {
+					// save the index
+					rowIndex = j;
+					break;
+				}
+
+			}
+
+			decodedMessage[i] = theCipher[rowIndex][0];
+		}
+		System.out.println("\nHere is your decoded message:");
+		System.out.println(decodedMessage);
+		System.out.println("");
 	}
 
 	public void run() throws IOException {
-		encode();
+		System.out.println("Welcome to the Vigenere Cipher program!");
+		do {
+			System.out.println(
+					"Enter the number of the action you would like to do.\n1) Encode\n2) Decode\n3) Both\n4) Exit");
+			input = sc.nextInt();
+			switch (input) {
+			case 1:
+				encode();
+				break;
+			case 2:
+				decode();
+				break;
+			case 3:
+				encode();
+				decode();
+				break;
+			case 4:
+				System.exit(0);
+			default:
+				System.out.println("Invalid Input!");
+			}
+
+		} while (true);
+
 	}
 }
