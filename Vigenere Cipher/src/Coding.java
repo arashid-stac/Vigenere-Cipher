@@ -36,7 +36,7 @@ public class Coding {
 				System.out.println(
 						"Please make sure the keyword is one word and that its length is less than the message length.");
 			}
-		} while (keywordLength > messageLength || keywordLength == 0 || keyword.contains(""));
+		} while (keywordLength > messageLength || keywordLength == 0 || keyword.contains(" "));
 
 		// If the keyword's length is shorter than that of the message, loop the
 		// keyword back until the two are of equal length
